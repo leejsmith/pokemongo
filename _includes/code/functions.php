@@ -23,8 +23,8 @@
 
 	function login($email, $password, $mysqli) {
 	// Using prepared statements means that SQL injection is not possible.
-	if ($stmt = $mysqli->prepare("SELECT id, username, password
-		FROM members
+	if ($stmt = $mysqli->prepare("SELECT userID, username, password
+		FROM tbl_Users
 	   WHERE email = ?
 		LIMIT 1")) {
 			$stmt->bind_param('s', $email);  // Bind "$email" to parameter.
@@ -53,6 +53,7 @@
 						$user_browser = $_SERVER['HTTP_USER_AGENT'];
 						// XSS protection as we might print this value
 						$user_id = preg_replace("/[^0-9]+/", "", $user_id);
+
 						$_SESSION['user_id'] = $user_id;
 						// XSS protection as we might print this value
 						$username = preg_replace("/[^a-zA-Z0-9_\-]+/","",$username);
@@ -64,7 +65,7 @@
 						// Password is not correct
 						// We record this attempt in the database
 						$now = time();
-						$mysqli->query("INSERT INTO login_attempts(user_id, time) VALUES ('$user_id', '$now')");
+						$mysqli->query("INSERT INTO tbl_LoginAttempts(user_id, time) VALUES ('$user_id', '$now')");
 						return false;
 					}
 				}
@@ -108,7 +109,7 @@
 			// Get the user-agent string of the user.
 			$user_browser = $_SERVER['HTTP_USER_AGENT'];
 
-			if ($stmt = $mysqli->prepare("SELECT password FROM members WHERE id = ? LIMIT 1")) {
+			if ($stmt = $mysqli->prepare("SELECT password FROM tbl_Users WHERE userID = ? LIMIT 1")) {
 				// Bind "$user_id" to parameter.
 				$stmt->bind_param('i', $user_id);
 				$stmt->execute();   // Execute the prepared query.

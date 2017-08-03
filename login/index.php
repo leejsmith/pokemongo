@@ -1,19 +1,44 @@
-<?php require_once($_SERVER['DOCUMENT_ROOT'] . "/_includes/global/header.php"); ?>
-<div class="login__form">
 <?php
-	if (!empty($_POST)){
-		$username = $_POST['username'];
-		$password = $_POST['password'];
-		
-		
-	} else {
-		if (isset($_SESSION['userid'])) {
+include_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/code/db_connect.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/code/functions.php';
 
-		} else {
+sec_session_start();
 
-			require_once($_SERVER['DOCUMENT_ROOT'] . "/login/login_form.php");
-		}
-	}
+if (login_check($mysqli) == true) {
+	$logged = 'in';
+} else {
+	$logged = 'out';
+}
 ?>
-</div>
-<?php require_once($_SERVER['DOCUMENT_ROOT'] . "/_includes/global/footer.php"); ?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Secure Login: Log In</title>
+		<link rel="stylesheet" href="/_includes/css/main.css" />
+		<script type="text/JavaScript" src="/_includes/js/sha512.js"></script>
+		<script type="text/JavaScript" src="/_includes/js/forms.js"></script>
+	</head>
+	<body>
+		<?php
+		if (isset($_GET['error'])) {
+			echo '<p class="error">Error Logging In!</p>';
+		}
+		?>
+		<form action="/_includes/code/process_login.php" method="post" name="login_form">
+			Email: <input type="text" name="email"/>
+			Password: <input type="password" name="password" id="password"/>
+			<input type="button" value="Login" onclick="formhash(this.form, this.form.password);" />
+		</form>
+
+<?php
+		if (login_check($mysqli) == true) {
+						echo '<p>Currently logged ' . $logged . ' as ' . htmlentities($_SESSION['username']) . '.</p>';
+
+			echo '<p>Do you want to change user? <a href="/_includes/code/logout.php">Log out</a>.</p>';
+		} else {
+						echo '<p>Currently logged ' . $logged . '.</p>';
+						echo "<p>If you don't have a login, please <a href='/register'>register</a></p>";
+				}
+?>
+	</body>
+</html>

@@ -1,10 +1,10 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/_includes/global/psl-config.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/_includes/code/psl-config.php";
 // Create connection
-$conn = new mysqli(HOST, USERNAME, PASSWORD, DATABASE);
+$mysqli = new mysqli(HOST, USERNAME, PASSWORD, DATABASE);
 
 // Check connection
-if ($conn->connect_error) {
+if ($mysqli->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 

@@ -1,4 +1,4 @@
-<form action="/login/index.php" method="post">
+<form action="/_includes/code/process_login.php" method="post">
 	<label for="username">Username:</label>
 	<input type="text" name="username"/>
 	<label for="password">Password:</label>
