@@ -17,8 +17,11 @@
 		session_set_cookie_params($cookieParams["lifetime"], $cookieParams["path"], $cookieParams["domain"], $secure, $httponly);
 		// Sets the session name to the one set above.
 		session_name($session_name);
-		session_start();			// Start the PHP session
-		session_regenerate_id();	// regenerated the session, delete the old one.
+		if (!isset($_SESSION)){
+			session_start();			// Start the PHP session
+			session_regenerate_id();	// regenerated the session, delete the old one.
+		}
+
 	}
 
 	function login($email, $password, $mysqli) {
@@ -172,5 +175,202 @@
 			return $url;
 		}
 	}
+
+	function displayPokemon($mysqli){
+		return displayPokemonV2($mysqli, "all");
+	}
+
+	function displayPokemonV2($mysqli, $type){
+		$strSQLWhere = ";";
+		$retVal = "";
+		if ($type != "all"){
+			$strSQLWhere = " where pokemonType1 = '" . $type . "' OR pokemonType2 = '" . $type . "';";
+		}
+
+		$strSQL = "SELECT * FROM tbl_Pokemon" . $strSQLWhere;
+		if ($stmt = $mysqli->prepare($strSQL)) {
+			$stmt->execute();   // Execute the prepared query.
+			$stmt->bind_result($id, $name, $type1, $type2);
+			$i=1;
+			$retVal = "<table><tbody><tr>";
+			while ($stmt->fetch()){
+				if ($id < 10){
+					$imgID = "00" . $id;
+				} else if ($id < 100){
+					$imgID = "0" . $id;
+				} else {
+					$imgID = $id;
+				}
+				$retVal .= "<td data--id='".$id."'><a href=\"/pokemon/?pkid=".$id."\"><span class\"number\">#" . $imgID . "</span>" . "<img src=\"/_includes/images/pokemon/".$imgID.".png\" alt=\"".$name."\"/>" . $name . "</a><a class=\"add__pokemon\" data--id=\"".$id."\" href=\"javascript:void();\">Add to MyGo</a></td>";
+				if ($i % 3 === 0){
+					$retVal .= "</tr><tr>";
+				}
+				$i++;
+			}
+			$retVal .= "</tbody></table>";
+		}
+		return $retVal;
+	}
+	function displaySinglePokemon($mysqli, $pkid){
+		$pkid = mysqli_real_escape_string($mysqli, $pkid);
+
+		$strSQL = "SELECT * FROM tbl_Pokemon WHERE pokemonID = ". $pkid;
+		$retVal = "";
+		if ($stmt= $mysqli->prepare($strSQL)){
+			$stmt->execute();
+			$stmt->bind_result($id, $name, $type1, $type2);
+			$stmt->store_result();
+			$stmt->fetch();
+
+			if ($id < 10){
+				$imgID = "00" . $id;
+			} else if ($id < 100){
+				$imgID = "0" . $id;
+			} else {
+				$imgID = $id;
+			}
+
+			$retVal .= "<h1 class=\"pokemon__name\">#" . $imgID . " - " . $name . "</h1>";
+
+			$retVal .= "<img class=\"pokemon_image\" src=\"/_includes/images/pokemon/" . $imgID . ".png\" alt=\"". $name ."\"/>";
+			$retVal .= "<h2>Moves</h2>";
+			$strSQLFast = "SELECT FM.*, T.typeName FROM tbl_PokemonToFast AS PTF  LEFT JOIN tbl_FastMoves AS FM ON PTF.moveID = FM.moveID LEFT JOIN tbl_Types AS T ON T.typeID = FM.moveTypeID WHERE pokemonID = " . $id;
+
+			if ($stmtFast = $mysqli->prepare($strSQLFast)){
+				$stmtFast->execute();
+
+				$stmtFast->bind_result($moveFastID, $moveFastName, $moveFastTypeID, $moveFastPower, $moveFastEnergy, $moveFastDPS, $moveFastEPS, $moveFastTime, $moveFastTypeName);
+				$retVal .= "<h3>Fast Moves</h3>";
+				$retVal .= "<table class=\"fast__moves\"><thead><tr><th>Move Name</th><th>Move Type</th><th>Move Power</th><th>Move Energy Fill</th><th>Move Damage PS</th><th>Move Energy PS</th><th>Move Time</th></tr></thead><tbody>";
+				$stmtFast->store_result();
+				while ($stmtFast->fetch()){
+					$retVal .= "<tr><td>" . $moveFastName ."</td><td><span class=\"moveFasttype moveFasttype--" . strtolower($moveFastTypeName) ."\">" . $moveFastTypeName . "</span></td><td>" . $moveFastPower."</td><td>" . $moveFastEnergy ."</td><td>". $moveFastDPS ."</td><td>". $moveFastEPS ."</td><td>". $moveFastTime ."</td></tr>";
+				}
+				$retVal .= "</tbody></table>";
+			}
+
+			$strSQLCharged = "SELECT CM.*, T.typeName FROM tbl_PokemonToCharged AS PTC  LEFT JOIN tbl_ChargedMoves AS CM ON PTC.moveID = CM.moveID LEFT JOIN tbl_Types AS T ON T.typeID = CM.moveTypeID WHERE pokemonID = " . $id;
+			if ($stmtCharged = $mysqli->prepare($strSQLCharged)){
+				$stmtCharged->execute();
+
+				$stmtCharged->bind_result($moveChargedID, $moveChargedName, $moveChargedTypeID, $moveChargedCharges, $moveChargedPower, $moveChargedDuration, $moveChargedActive, $moveChargedTypeName);
+				$retVal .= "<h3>Charged Moves</h3>";
+				$retVal .= "<table class=\"fast__moves\"><thead><tr><th>Move Name</th><th>Move Type</th><th>Move Charges</th><th>Move Power</th><th>Move Duration</th><th>Move Time till hits</th></tr></thead><tbody>";
+				$stmtCharged->store_result();
+				while ($stmtCharged->fetch()){
+					$retVal .= "<tr><td>" . $moveChargedName ."</td><td><span class=\"movetype movetype--" . strtolower($moveChargedTypeName) ."\">" . $moveChargedTypeName . "</span></td><td>" . $moveChargedCharges."</td><td>" . $moveChargedPower ."</td><td>". $moveChargedDuration ."</td><td>". $moveChargedActive ."</td></tr>";
+				}
+				$retVal .= "</tbody></table>";
+			}
+		}
+		$retVal .= "<h2>Evolutions</h2>";
+		$evolutionTree = getPokemonEvolutions($mysqli, $pkid);
+		$isFirst = 1;
+		foreach (explode(":",$evolutionTree) AS $evoGroup){
+			$retVal .= "<div class=\"level level--" . $isFirst . "\">";
+			foreach (explode(",",$evoGroup) AS $evoPoke){
+				$retVal .= getPokemonShort($mysqli, $evoPoke, $isFirst);
+			}
+			$retVal .="</div>";
+			$isFirst++;
+		}
+		return $retVal;
+	}
+
+	function getPokemonShort($mysqli, $pkid, $isFirst){
+		$strSQL = "SELECT P.pokemonID, P.pokemonName, E.candy, E.item, E.description FROM tbl_Pokemon AS P LEFT JOIN tbl_Evolution AS E ON P.pokemonID = E.pokemon2 WHERE P.pokemonID = " . $pkid . ";";
+		$retVal = "";
+		if ($stmt = $mysqli->prepare($strSQL)){
+			$stmt->execute();
+			$stmt->bind_result($id, $name, $candy, $item, $desc);
+			$stmt->store_result();
+			$stmt->fetch();
+			if ($id < 10){
+				$imgID = "00" . $id;
+			} else if ($id < 100){
+				$imgID = "0" . $id;
+			} else {
+				$imgID = $id;
+			}
+			$retVal = "<div class=\"pokemon__evo\">";
+			if ($isFirst != 1){
+				$retVal .= "<div class=\"arrow\"></div>";
+			}
+
+			$retVal .= "<div class=\"pokemon__details\">";
+			$retVal .= "<div class=\"pokemon__img\"><img src=\"/_includes/images/pokemon/".$imgID.".png\" alt=\"".$name."\"/></div>";
+			$retVal .= "<div class=\"pokemon__id\">#" . $imgID . "</div>";
+			$retVal .= "<div class=\"pokemon__name\"><p>" . $name . "</p></div>";
+			$retVal .= "</div></div>";
+
+			return $retVal;
+		}
+	}
+
+	function getPokemonEvolutions($mysqli, $pkid){
+		$thisEvo = $pkid;
+		$firstEvo = "";
+		$evoCount = 0;
+		while(true){
+			 $thisEvo = getFirstEvolution($mysqli, $thisEvo);
+			 if ($thisEvo == "false") {
+				 if ($evoCount == 0){
+					 $firstEvo = $pkid;
+				 }
+				break;
+			 } else {
+				 $evoCount++;
+				 $firstEvo = $thisEvo;
+			 }
+		}
+		return getAllEvolutions($mysqli, $firstEvo);
+	}
+
+	function getFirstEvolution($mysqli, $pkid){
+		$strSQL = "SELECT pokemon1 FROM tbl_Evolution WHERE pokemon2 IN (" . $pkid . ");";
+		if ($stmt = $mysqli->prepare($strSQL)){
+			$stmt->execute();
+			$stmt->bind_result($pk1);
+			$stmt->store_result();
+			if ($stmt->num_rows > 0){
+				$stmt->fetch();
+				return $pk1;
+			} else {
+				return "false";
+			}
+		}
+	}
+
+	function getAllEvolutions($mysqli, $pkid){
+		$retVal = $pkid;
+		$retVal .= getEvolutions($mysqli, $pkid, "");
+		return $retVal;
+	}
+
+	function getEvolutions($mysqli, $pkid, $retIn){
+		$retVal = "";
+		$addPkm = "";
+		$strSQL = "SELECT * FROM tbl_Evolution WHERE pokemon1 IN (" . $pkid . ");";
+		if ($stmtEvo = $mysqli->prepare($strSQL)){
+			$stmtEvo->execute();
+			$stmtEvo->bind_result($pk1, $pk2, $candy, $item, $desc);
+			$stmtEvo->store_result();
+			if ($stmtEvo->num_rows >= 1){
+				while($stmtEvo->fetch()){
+					if ($addPkm != ""){
+						$addPkm .= ",";
+					}
+					$addPkm .= $pk2;
+				}
+				$retVal .=  ":" . $addPkm ;
+					$retVal .= getEvolutions($mysqli, $pk2, $retVal);
+				return $retVal;
+			} else {
+				return false;
+			}
+		}
+	}
+
+
 
 ?>

@@ -2,11 +2,16 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/code/db_connect.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/code/functions.php';
 
-// Include database connection and functions here.  See 3.1.
 sec_session_start();
+
+require_once($_SERVER['DOCUMENT_ROOT'] . "/_includes/global/header.php");
+$logged = false;
 if(login_check($mysqli) == true) {
-        echo "This is a test";
-} else {
-        echo 'You are not authorized to access this page, please login.';
+	$logged = true;
 }
+?>
+<link rel="stylesheet" href="/_includes/css/mygo.css" type="text/css" />
+<script type="text/javascript" src="/_includes/js/mygo.js"></script>
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/global/header.common.php';
 ?>

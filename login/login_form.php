@@ -1,7 +1,0 @@
-<form action="/_includes/code/process_login.php" method="post">
-	<label for="username">Username:</label>
-	<input type="text" name="username"/>
-	<label for="password">Password:</label>
-	<input type="password" name="password"/>
-	<button type="submit" value="login" name="action">Login</button>
-</form>
