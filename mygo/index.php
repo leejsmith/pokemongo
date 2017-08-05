@@ -15,3 +15,9 @@ if(login_check($mysqli) == true) {
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/global/header.common.php';
 ?>
+<h1>My Pokemon</h1>
+<?php echo displayMyPokemon($mysqli, $_SESSION['user_id']);?>
+<?php require_once($_SERVER['DOCUMENT_ROOT'] . "/_includes/global/footer.php");?>
+<?php
+require_once($_SERVER['DOCUMENT_ROOT'] . "/_includes/global/footer.common.php");
+?>

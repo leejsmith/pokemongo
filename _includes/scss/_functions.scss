@@ -27,3 +27,60 @@
         clear:both;
     }
 }
+
+@mixin displayTypes() {
+  &--normal {
+            background: #6e6e6e;
+        }
+        &--fighting {
+            background: #a2642e;
+        }
+        &--flying {
+            background: #6398ab;
+        }
+        &--poison {
+            background: #ae00ff;
+        }
+        &--ground {
+            background: #a0642e;
+        }
+        &--rock {
+            background: #4f3117
+        }
+        &--bug {
+            background: #99c12f;
+        }
+        &--ghost {
+            background: #330296;
+        }
+        &--steel {
+            background: #bababa;
+        }
+        &--fire {
+            background: #ff6c00;
+        }
+        &--water {
+            background: #007eff;
+        }
+        &--grass {
+            background: #247b26;
+        }
+        &--electric {
+            background: #ebd300;
+        }
+        &--psychic {
+            background: #ff00ba;
+        }
+        &--ice {
+            background: #64e2a8;
+        }
+        &--dragon {
+            background: #1e00ff;
+        }
+        &--fairy {
+            background: #e77ce6;
+        }
+        &--dark {
+            background: #2c292c;
+        }
+}

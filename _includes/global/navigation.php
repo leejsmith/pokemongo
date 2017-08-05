@@ -20,17 +20,13 @@ sec_session_start();
 		</button>
 	</div>
 	<div class="title">
-		<h1 class="title_head"><a href="/"><img src="/_includes/images/site/mypogo.png" alt="My Pokemon Go"/></a></h1>
+		<h1 class="title_head"><img src="/_includes/images/site/mypogo.png" alt="My Pokemon Go"/></h1>
 	</div>
 
 
 	<nav class="menu">
 		<ul class="main__menu__list">
-			<li class="main__menu__list__item"><a href="/">Home</a></li>
-			<li class="main__menu__list__item"><a href="/pokemon">Pokemon</a></li>
-			<li class="main__menu__list__item"><a href="/moves">Moves</a></li>
-			<li class="main__menu__list__item"><a href="/items">Items</a></li>
-			<li class="main__menu__list__item"><a href="/mygo">My Pokemon Go</a></li>
+			<li class="main__menu__list__item"><a href="/">Home</a></li><li class="main__menu__list__item"><a href="/pokemon">Pokemon</a></li><li class="main__menu__list__item"><a href="/moves">Moves</a></li><li class="main__menu__list__item"><a href="/items">Items</a></li><?php if (login_check($mysqli)) {echo "<li class=\"main__menu__list__item\"><a href=\"/mygo\">MyGo</a></li>";}?>
 		</ul>
 	</nav>
 </header>

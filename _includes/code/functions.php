@@ -207,7 +207,7 @@
 				}
 				$retVal .= "</div><a class=\"pokemon__item__link\" href=\"/pokemon/?pkid=".$id."\">View</a>";
 				if($loggedIn) {
-					$retVal .= "<a class=\"add__pokemon\" data--id=\"".$id."\" href=\"javascript:void();\">Add to MyGo</a>";
+					$retVal .= "<a class=\"add__pokemon\" data-pokemon=\"".$id."\" href=\"#\">Add to MyGo</a>";
 				}
 				$retVal .= "</div>";
 
@@ -286,7 +286,7 @@
 		foreach (explode(":",$evolutionTree) AS $evoGroup){
 			$retVal .= "<div class=\"level level--" . $isFirst . " pokemon__evos--". $noEvos ."\">";
 			foreach (explode(",",$evoGroup) AS $evoPoke){
-				$retVal .= getPokemonShort($mysqli, $evoPoke, $isFirst, $noEvos);
+				$retVal .= getPokemonShort($mysqli, $evoPoke, $isFirst, $noEvos, true);
 			}
 			$retVal .="</div>";
 			$isFirst++;
@@ -295,7 +295,7 @@
 		return $retVal;
 	}
 
-	function getPokemonShort($mysqli, $pkid, $isFirst, $noEvos){
+	function getPokemonShort($mysqli, $pkid, $isFirst, $noEvos, $showEvos){
 		$strSQL = "SELECT P.pokemonID, P.pokemonName, E.candy, E.item, E.description FROM tbl_Pokemon AS P LEFT JOIN tbl_Evolution AS E ON P.pokemonID = E.pokemon2 WHERE P.pokemonID = " . $pkid . ";";
 		$retVal = "";
 		if ($stmt = $mysqli->prepare($strSQL)){
@@ -310,20 +310,21 @@
 			} else {
 				$imgID = $id;
 			}
-			$retVal .= "<div class=\"pokemon__evo\">";
-			if ($isFirst != 1){
-				$retVal .= "<div class=\"arrow__wrapper\"></div>";
-				if (!is_null($item)){
-					$retVal .= "<div class=\"item item--" . $item . "\"><img src=\"/_includes/images/site/item_".$item.".png\"/></div>";
-				}
-				if (!is_null($candy)){
-					$retVal .= "<div class=\"candy\">" . $candy . " Candy</div>";
-				}
-				if (!is_null($desc)){
-					$retVal .= "<div class=\"evo__desc\">" . $desc . "</div>";
+			if ($showEvos){
+				$retVal .= "<div class=\"pokemon__evo\">";
+				if ($isFirst != 1){
+					$retVal .= "<div class=\"arrow__wrapper\"></div>";
+					if (!is_null($item)){
+						$retVal .= "<div class=\"item item--" . $item . "\"><img src=\"/_includes/images/site/item_".$item.".png\"/></div>";
+					}
+					if (!is_null($candy)){
+						$retVal .= "<div class=\"candy\">" . $candy . " Candy</div>";
+					}
+					if (!is_null($desc)){
+						$retVal .= "<div class=\"evo__desc\">" . $desc . "</div>";
+					}
 				}
 			}
-
 			$retVal .= "<div class=\"pokemon__details\">";
 			$retVal .= "<div class=\"pokemon__img\"><img src=\"/_includes/images/pokemon/".$imgID.".png\" alt=\"".$name."\"/></div>";
 			$retVal .= "<div class=\"pokemon__id\">#" . $imgID . "</div>";
@@ -333,7 +334,29 @@
 			return $retVal;
 		}
 	}
+		function getPokemonImage($mysqli, $pkid){
+		$strSQL = "SELECT P.pokemonID, P.pokemonName, E.candy, E.item, E.description FROM tbl_Pokemon AS P LEFT JOIN tbl_Evolution AS E ON P.pokemonID = E.pokemon2 WHERE P.pokemonID = " . $pkid . ";";
+		$retVal = "";
+		if ($stmt = $mysqli->prepare($strSQL)){
+			$stmt->execute();
+			$stmt->bind_result($id, $name, $candy, $item, $desc);
+			$stmt->store_result();
+			$stmt->fetch();
+			if ($id < 10){
+				$imgID = "00" . $id;
+			} else if ($id < 100){
+				$imgID = "0" . $id;
+			} else {
+				$imgID = $id;
+			}
+			$retVal .= "<div class=\"add__pokemon__details\">";
+			$retVal .= "<div class=\"add__pokemon__name\"><p>#" . $imgID . " " . $name . "</p></div>";
+			$retVal .= "<div class=\"add__pokemon__img\"><img src=\"/_includes/images/pokemon/".$imgID.".png\" alt=\"".$name."\"/></div>";
+			$retVal .= "</div>";
 
+			return $retVal;
+		}
+	}
 	function getPokemonEvolutions($mysqli, $pkid){
 		$thisEvo = $pkid;
 		$firstEvo = "";
@@ -398,6 +421,78 @@
 		}
 	}
 
+	function getPokemonFastMoves($mysqli, $pkid){
+		$strSQL = "SELECT PTF.moveID, F.moveName FROM tbl_PokemonToFast PTF LEFT JOIN tbl_FastMoves AS F ON PTF.moveID = F.moveID WHERE pokemonID=" . $pkid . ";";
+		$retVal = "";
 
+		if ($stmt = $mysqli->prepare($strSQL)){
+			$stmt->execute();
+			$stmt->bind_result($moveID, $moveName);
+			$stmt->store_result();
+			while($stmt->fetch()){
+				$retVal .= "<option value=\"" . $moveID . "\">" . $moveName . "</option>";
+			}
+		}
+		return $retVal;
+	}
+	function getPokemonChargedMoves($mysqli, $pkid){
+		$strSQL = "SELECT PTC.moveID, C.moveName FROM tbl_PokemonToCharged PTC LEFT JOIN tbl_ChargedMoves AS C ON PTC.moveID = C.moveID WHERE pokemonID=" . $pkid . ";";
+		if ($stmt = $mysqli->prepare($strSQL)){
+			$stmt->execute();
+			$stmt->bind_result($moveID, $moveName);
+			$stmt->store_result();
+			while($stmt->fetch()){
+				$retVal .= "<option value=\"" . $moveID . "\">" . $moveName . "</option>";
+			}
+		}
+		return $retVal;
+	}
+
+	function displayMyPokemon($mysqli, $userID){
+		$strSQL = "SELECT UP.pokemonUserID, UP.pokemonID,P.pokemonName,  T1.typeName AS type1Name, T2.typeName AS type2Name ,UP.candy,UP.cp, FM.moveID AS fastMoveID, FM.moveName AS fastName, FM.movePower AS fastPower , FMT.typeName AS fastType, CM.moveID AS chargedMoveID, CM.moveName AS chargedName,CM.movePower AS chargedPower, CMT.typeName AS chargedType FROM tbl_UserPokemon AS UP LEFT JOIN tbl_Pokemon AS P ON P.pokemonID = UP.pokemonID LEFT JOIN tbl_Types AS T1 ON P.pokemonType1 = T1.typeID LEFT JOIN tbl_Types AS T2 ON P.pokemonType2 = T2.typeID LEFT JOIN tbl_FastMoves FM ON FM.moveID = UP.fastMove LEFT JOIN tbl_Types AS FMT ON FM.moveTypeID = FMT.typeID LEFT JOIN tbl_ChargedMoves CM ON CM.moveID = UP.chargedMove LEFT JOIN tbl_Types AS CMT ON CM.moveTypeID = CMT.typeID WHERE userID = " . $userID;
+		$retVal = "";
+		if ($stmt = $mysqli->prepare($strSQL)){
+			$stmt->execute();
+			$stmt->bind_result($pkuserID, $pkid, $pkmName,$type1Name, $type2Name, $candy, $cp, $fastMoveId, $fastMoveName, $fastPower, $fastMoveType, $chargedMoveID, $chargedMoveName, $chargedPower, $chargedMoveType);
+			$stmt->store_result();
+			if ($stmt->num_rows > 0){
+				while($stmt->fetch()){
+					if ($pkid < 10){
+						$imgID = "00" . $pkid;
+					} else if ($pkid < 100){
+						$imgID = "0" . $pkid;
+					} else {
+						$imgID = $pkid;
+					}
+
+					$retVal .= "<div class=\"pokemon__wrapper\">";
+					$retVal .= "<div class=\"pokemon__cp\"><span class=\"pokemon__cp__text\">CP</span>" . $cp . "</div>";
+					$retVal .= "<div class=\"pokemon__img\"><img src=\"/_includes/images/pokemon/".$imgID.".png\"/></div>";
+					$retVal .= "<div class=\"pokemon__name\">" . $pkmName . "</div>";
+					$retVal .= "<div class=\"pokemon__type__wrapper\">";
+					$retVal .= "<span class=\"pokemon__type pokemon__type--". strToLower($type1Name) ."\">" . $type1Name . "</span>";
+					if (!is_null($type2Name)){
+					$retVal .= "<span class=\"pokemon__type pokemon__type--". strToLower($type2Name) ."\">" . $type2Name . "</span>";
+					}
+					$retVal .= "</div>";
+					$retVal .= "<div class=\"pokemon__candy\">Candy: " . $candy . "</div>";
+					$retVal .= "<div class=\"pokemon__fastMove\">";
+					$retVal .= "<span class\"pokemon__fastMove__name\">" . $fastMoveName . "</span>";
+					$retVal .= "<span class\"pokemon__fastMove__type pokemon__fastMove__type--". strtolower($fastMoveType) ."\">" . $fastMoveType . "</span>";
+					$retVal .= "<span class\"pokemon__fastMove__power\">" . $fastPower . "</span>";
+					$retVal .= "</div>";
+					$retVal .= "<div class=\"pokemon__chargedMove\">";
+					$retVal .= "<span class\"pokemon__chargedMove__name\">" . $chargedMoveName . "</span>";
+					$retVal .= "<span class\"pokemon__chargedMove__type pokemon__chargedMove__type--". strtolower($chargedMoveType) ."\">" . $chargedMoveType . "</span>";
+					$retVal .= "<span class\"pokemon__chargedMove__power\">" . $chargedPower . "</span>";
+					$retVal .= "</div>";
+					$retVal .= "</div>";
+				}
+			} else {
+				$retVal = "<p>You currently don't have any pokemon stored.</p>";
+			}
+		}
+		return $retVal;
+	}
 
 ?>

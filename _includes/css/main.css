@@ -2,12 +2,12 @@ body { background: url("/_includes/images/site/background.jpg"); background-repe
 
 .wrapper { max-width: 1170px; margin: 0 auto; position: relative; overflow: hidden; min-height: 100vh; padding: 5px; }
 
-header .title_head a { display: block; }
-header .title_head a img { margin: 0 auto; display: block; }
+header .title_head { display: block; }
+header .title_head img { margin: 0 auto; display: block; }
 header .login__link p { margin: 0; text-align: right; padding: 8px; }
 header .login__link p a { color: #333; text-decoration: none; }
 
-.menu__button button { width: 100%; height: 55px; border: none; background: none; }
+.menu__button button { width: 100%; height: 55px; border: none; background: none; font-family: 'Lato'; }
 .menu__button button span { font-size: 50px; color: #333; font-weight: 600; letter-spacing: 3px; }
 .menu__button button span img { margin: 0 10px; }
 .menu__button button span.menu__btn--closed { display: block; }
@@ -23,9 +23,16 @@ header .login__link p a { color: #333; text-decoration: none; }
 
 .wrapper--menu .menu { top: 110px; }
 
+@media screen and (min-width: 1024px) { .menu__button { display: none; }
+  .menu { position: relative; background: none; }
+  .menu .main__menu__list__item { display: inline-block; }
+  .menu .main__menu__list__item a { padding: 10px 20px; } }
 form.register, form.login { position: relative; }
 form.register label, form.login label { display: inline-block; width: 45%; text-align: right; padding-right: 10px; }
 form.register input, form.login input { display: inline-block; width: 50%; border: 1px solid #333; }
 form.register input.submit, form.login input.submit { font-size: 24px; letter-spacing: 3px; width: 60%; margin: 0 auto; display: block; background: rgba(255, 255, 255, 0.6); margin-top: 10px; }
+
+@media screen and (min-width: 568px) { form.register, form.login { font-size: 24px; }
+  form.register input, form.login input { width: 200px; font-size: 20px; } }
 
 

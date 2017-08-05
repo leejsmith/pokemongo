@@ -23,4 +23,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/global/header.php';
 			<input class="submit" type="button" value="Register" onclick="return regformhash(this.form,this.form.username, this.form.email,this.form.password,this.form.confirmpwd);" />
 		</form>
 		<p>Return to the <a href="/login">login page</a>.</p>
-<?php include_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/global/footer.php'; ?>
+<?php include_once $_SERVER['DOCUMENT_ROOT'] . '/_includes/global/footer.php';
+require_once($_SERVER['DOCUMENT_ROOT'] . "/_includes/global/footer.common.php");
+?>

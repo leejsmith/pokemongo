@@ -31,3 +31,4 @@ sec_session_start();
 				}
 ?>
 <?php require_once($_SERVER['DOCUMENT_ROOT'] . "/_includes/global/footer.php"); ?>
+<?php require_once($_SERVER['DOCUMENT_ROOT'] . "/_includes/global/footer.common.php"); ?>
