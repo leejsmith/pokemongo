@@ -14,10 +14,10 @@ sec_session_start();
 			echo '<p class="error">Error Logging In!</p>';
 		}
 		?>
-		<form action="/_includes/code/process_login.php" method="post" name="login_form">
-			Email: <input type="text" name="email"/>
-			Password: <input type="password" name="password" id="password"/>
-			<input type="button" value="Login" onclick="formhash(this.form, this.form.password);" />
+		<form class="login" action="/_includes/code/process_login.php" method="post" name="login_form">
+			<label for="email">Email:</label><input type="text" name="email"/>
+			<label for="password">Password:</label><input type="password" name="password" id="password"/>
+			<input class="submit" type="button" value="Login" onclick="formhash(this.form, this.form.password);" />
 		</form>
 
 <?php

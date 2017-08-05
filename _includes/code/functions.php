@@ -176,23 +176,22 @@
 		}
 	}
 
-	function displayPokemon($mysqli){
-		return displayPokemonV2($mysqli, "all");
+	function displayPokemon($mysqli, $loggedIn){
+		return displayPokemonV2($mysqli, "all", $loggedIn);
 	}
 
-	function displayPokemonV2($mysqli, $type){
+	function displayPokemonV2($mysqli, $type, $loggedIn){
 		$strSQLWhere = ";";
 		$retVal = "";
 		if ($type != "all"){
 			$strSQLWhere = " where pokemonType1 = '" . $type . "' OR pokemonType2 = '" . $type . "';";
 		}
 
-		$strSQL = "SELECT * FROM tbl_Pokemon" . $strSQLWhere;
+		$strSQL = "SELECT P.pokemonID, P.pokemonName, T1.typeName as type1, T2.typeName AS type2 FROM tbl_Pokemon AS P LEFT JOIN tbl_Types AS T1 ON P.pokemonType1 = T1.typeID LEFT JOIN tbl_Types AS T2 ON P.pokemonType2 = T2.typeID" . $strSQLWhere;
 		if ($stmt = $mysqli->prepare($strSQL)) {
 			$stmt->execute();   // Execute the prepared query.
 			$stmt->bind_result($id, $name, $type1, $type2);
-			$i=1;
-			$retVal = "<table><tbody><tr>";
+			$retVal = "<div class=\"pokemon__wrapper\">";
 			while ($stmt->fetch()){
 				if ($id < 10){
 					$imgID = "00" . $id;
@@ -201,13 +200,19 @@
 				} else {
 					$imgID = $id;
 				}
-				$retVal .= "<td data--id='".$id."'><a href=\"/pokemon/?pkid=".$id."\"><span class\"number\">#" . $imgID . "</span>" . "<img src=\"/_includes/images/pokemon/".$imgID.".png\" alt=\"".$name."\"/>" . $name . "</a><a class=\"add__pokemon\" data--id=\"".$id."\" href=\"javascript:void();\">Add to MyGo</a></td>";
-				if ($i % 3 === 0){
-					$retVal .= "</tr><tr>";
+				$retVal .= "<div class=\"pokemon__item\"><span class=\"pokemon__item__number\">#" . $imgID . "</span>" . "<div class=\"pokemon__item__image\"><img src=\"/_includes/images/pokemon/".$imgID.".png\" alt=\"".$name."\"/></div><span class=\"pokemon__item__name\">" . $name . "</span>";
+				$retVal .= "<div class=\"pokemon__item__types\"><span class=\"type type--". strtolower($type1) . "\">".$type1."</span>";
+				if (!is_null($type2)){
+					$retVal .= "<span class=\"type type--".strtolower($type2)."\">".$type2."</span>";
 				}
-				$i++;
+				$retVal .= "</div><a class=\"pokemon__item__link\" href=\"/pokemon/?pkid=".$id."\">View</a>";
+				if($loggedIn) {
+					$retVal .= "<a class=\"add__pokemon\" data--id=\"".$id."\" href=\"javascript:void();\">Add to MyGo</a>";
+				}
+				$retVal .= "</div>";
+
 			}
-			$retVal .= "</tbody></table>";
+			$retVal .= "</div>";
 		}
 		return $retVal;
 	}
@@ -218,7 +223,7 @@
 		$retVal = "";
 		if ($stmt= $mysqli->prepare($strSQL)){
 			$stmt->execute();
-			$stmt->bind_result($id, $name, $type1, $type2);
+			$stmt->bind_result($id, $name, $type1, $type2, $stamina, $attack, $defence);
 			$stmt->store_result();
 			$stmt->fetch();
 
@@ -231,8 +236,18 @@
 			}
 
 			$retVal .= "<h1 class=\"pokemon__name\">#" . $imgID . " - " . $name . "</h1>";
+			$retVal .= "<img class=\"pokemon__image\" src=\"/_includes/images/pokemon/" . $imgID . ".png\" alt=\"". $name ."\"/>";
+			$retVal .= "<h2>Base Stats</h2>";
+			$retVal .= "<div class=\"pokemon__stats\"><table><tbody>";
+			$retVal .= "<tr><th>Stamina:</th><td>" . $stamina . "</td></tr>";
+			$retVal .= "<tr><th>Attack:</th><td>" . $attack . "</td></tr>";
+			$retVal .= "<tr><th>Defence:</th><td>" . $defence . "</td></tr>";
+			$total = $stamina + $attack + $defence;
+			$average = $total / 3;
+			$retVal .= "<tr><th>Total:</th><td>" . $total . "</td></tr>";
+			$retVal .= "<tr><th>Average:</th><td>" . round($average, 2) . "</td></tr>";
+			$retVal .= "</tbody></table></div>";
 
-			$retVal .= "<img class=\"pokemon_image\" src=\"/_includes/images/pokemon/" . $imgID . ".png\" alt=\"". $name ."\"/>";
 			$retVal .= "<h2>Moves</h2>";
 			$strSQLFast = "SELECT FM.*, T.typeName FROM tbl_PokemonToFast AS PTF  LEFT JOIN tbl_FastMoves AS FM ON PTF.moveID = FM.moveID LEFT JOIN tbl_Types AS T ON T.typeID = FM.moveTypeID WHERE pokemonID = " . $id;
 
@@ -241,10 +256,10 @@
 
 				$stmtFast->bind_result($moveFastID, $moveFastName, $moveFastTypeID, $moveFastPower, $moveFastEnergy, $moveFastDPS, $moveFastEPS, $moveFastTime, $moveFastTypeName);
 				$retVal .= "<h3>Fast Moves</h3>";
-				$retVal .= "<table class=\"fast__moves\"><thead><tr><th>Move Name</th><th>Move Type</th><th>Move Power</th><th>Move Energy Fill</th><th>Move Damage PS</th><th>Move Energy PS</th><th>Move Time</th></tr></thead><tbody>";
+				$retVal .= "<table class=\"fast__moves\"><thead><tr><th>Name</th><th>Type</th><th>Power</th><th>Energy</th><th>DPS</th><th>Time</th></tr></thead><tbody>";
 				$stmtFast->store_result();
 				while ($stmtFast->fetch()){
-					$retVal .= "<tr><td>" . $moveFastName ."</td><td><span class=\"moveFasttype moveFasttype--" . strtolower($moveFastTypeName) ."\">" . $moveFastTypeName . "</span></td><td>" . $moveFastPower."</td><td>" . $moveFastEnergy ."</td><td>". $moveFastDPS ."</td><td>". $moveFastEPS ."</td><td>". $moveFastTime ."</td></tr>";
+					$retVal .= "<tr><td>" . $moveFastName ."</td><td><span class=\"movetype movetype--" . strtolower($moveFastTypeName) ."\">" . $moveFastTypeName . "</span></td><td>" . $moveFastPower."</td><td>" . $moveFastEnergy ."</td><td>". $moveFastDPS ."</td><td>". $moveFastTime ."</td></tr>";
 				}
 				$retVal .= "</tbody></table>";
 			}
@@ -255,7 +270,7 @@
 
 				$stmtCharged->bind_result($moveChargedID, $moveChargedName, $moveChargedTypeID, $moveChargedCharges, $moveChargedPower, $moveChargedDuration, $moveChargedActive, $moveChargedTypeName);
 				$retVal .= "<h3>Charged Moves</h3>";
-				$retVal .= "<table class=\"fast__moves\"><thead><tr><th>Move Name</th><th>Move Type</th><th>Move Charges</th><th>Move Power</th><th>Move Duration</th><th>Move Time till hits</th></tr></thead><tbody>";
+				$retVal .= "<table class=\"charged__moves\"><thead><tr><th>Name</th><th>Type</th><th>Charges</th><th>Power</th><th>Duration</th><th>Time</th></tr></thead><tbody>";
 				$stmtCharged->store_result();
 				while ($stmtCharged->fetch()){
 					$retVal .= "<tr><td>" . $moveChargedName ."</td><td><span class=\"movetype movetype--" . strtolower($moveChargedTypeName) ."\">" . $moveChargedTypeName . "</span></td><td>" . $moveChargedCharges."</td><td>" . $moveChargedPower ."</td><td>". $moveChargedDuration ."</td><td>". $moveChargedActive ."</td></tr>";
@@ -264,20 +279,23 @@
 			}
 		}
 		$retVal .= "<h2>Evolutions</h2>";
+		$retVal .= "<div class=\"evolution__wrapper\">";
 		$evolutionTree = getPokemonEvolutions($mysqli, $pkid);
 		$isFirst = 1;
+		$noEvos = sizeof(explode(":",$evolutionTree));
 		foreach (explode(":",$evolutionTree) AS $evoGroup){
-			$retVal .= "<div class=\"level level--" . $isFirst . "\">";
+			$retVal .= "<div class=\"level level--" . $isFirst . " pokemon__evos--". $noEvos ."\">";
 			foreach (explode(",",$evoGroup) AS $evoPoke){
-				$retVal .= getPokemonShort($mysqli, $evoPoke, $isFirst);
+				$retVal .= getPokemonShort($mysqli, $evoPoke, $isFirst, $noEvos);
 			}
 			$retVal .="</div>";
 			$isFirst++;
 		}
+		$retVal .= "</div>";
 		return $retVal;
 	}
 
-	function getPokemonShort($mysqli, $pkid, $isFirst){
+	function getPokemonShort($mysqli, $pkid, $isFirst, $noEvos){
 		$strSQL = "SELECT P.pokemonID, P.pokemonName, E.candy, E.item, E.description FROM tbl_Pokemon AS P LEFT JOIN tbl_Evolution AS E ON P.pokemonID = E.pokemon2 WHERE P.pokemonID = " . $pkid . ";";
 		$retVal = "";
 		if ($stmt = $mysqli->prepare($strSQL)){
@@ -294,12 +312,12 @@
 			}
 			$retVal .= "<div class=\"pokemon__evo\">";
 			if ($isFirst != 1){
-				$retVal .= "<div class=\"arrow__wrapper\"><div class=\"arrow\"></div>";
+				$retVal .= "<div class=\"arrow__wrapper\"></div>";
 				if (!is_null($item)){
-					$retVal .= "<div class=\"item item-- " . $item . "\"></div>";
+					$retVal .= "<div class=\"item item--" . $item . "\"><img src=\"/_includes/images/site/item_".$item.".png\"/></div>";
 				}
 				if (!is_null($candy)){
-					$retVal .= "<div class=\"candy\">" . $candy . "</div>";
+					$retVal .= "<div class=\"candy\">" . $candy . " Candy</div>";
 				}
 				if (!is_null($desc)){
 					$retVal .= "<div class=\"evo__desc\">" . $desc . "</div>";

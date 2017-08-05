@@ -1,0 +1,15 @@
+$bgcolor:#fff;
+$pri:#FFF;
+$sec:#5492E7;
+$text:#333;
+$facebook : #3B5998;
+$twitter : #1DA1F2;
+
+$breakpoints: (
+  'mobileportait': (min-width:320px),
+  'mobilelandscape': (min-width:568px),
+  'tabletportrait': (min-width:768px),
+  'tabletlandscape': (min-width: 1024px),
+  'desktop': (min-width: 1200px)
+) !default;
+
