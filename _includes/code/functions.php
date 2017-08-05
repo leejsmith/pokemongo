@@ -201,9 +201,9 @@
 					$imgID = $id;
 				}
 				$retVal .= "<div class=\"pokemon__item\"><span class=\"pokemon__item__number\">#" . $imgID . "</span>" . "<div class=\"pokemon__item__image\"><img src=\"/_includes/images/pokemon/".$imgID.".png\" alt=\"".$name."\"/></div><span class=\"pokemon__item__name\">" . $name . "</span>";
-				$retVal .= "<div class=\"pokemon__item__types\"><span class=\"type type--". strtolower($type1) . "\">".$type1."</span>";
+				$retVal .= "<div class=\"pokemon__item__types\"><span class=\"type type--". strtolower($type1) . "\"></span>";
 				if (!is_null($type2)){
-					$retVal .= "<span class=\"type type--".strtolower($type2)."\">".$type2."</span>";
+					$retVal .= "<span class=\"type type--".strtolower($type2)."\"></span>";
 				}
 				$retVal .= "</div><a class=\"pokemon__item__link\" href=\"/pokemon/?pkid=".$id."\">View</a>";
 				if($loggedIn) {
@@ -259,7 +259,7 @@
 				$retVal .= "<table class=\"fast__moves\"><thead><tr><th>Name</th><th>Type</th><th>Power</th><th>Energy</th><th>DPS</th><th>Time</th></tr></thead><tbody>";
 				$stmtFast->store_result();
 				while ($stmtFast->fetch()){
-					$retVal .= "<tr><td>" . $moveFastName ."</td><td><span class=\"movetype movetype--" . strtolower($moveFastTypeName) ."\">" . $moveFastTypeName . "</span></td><td>" . $moveFastPower."</td><td>" . $moveFastEnergy ."</td><td>". $moveFastDPS ."</td><td>". $moveFastTime ."</td></tr>";
+					$retVal .= "<tr><td>" . $moveFastName ."</td><td><span class=\"movetype movetype--" . strtolower($moveFastTypeName) ."\"></span></td><td>" . $moveFastPower."</td><td>" . $moveFastEnergy ."</td><td>". $moveFastDPS ."</td><td>". $moveFastTime ."</td></tr>";
 				}
 				$retVal .= "</tbody></table>";
 			}
@@ -273,7 +273,7 @@
 				$retVal .= "<table class=\"charged__moves\"><thead><tr><th>Name</th><th>Type</th><th>Charges</th><th>Power</th><th>Duration</th><th>Time</th></tr></thead><tbody>";
 				$stmtCharged->store_result();
 				while ($stmtCharged->fetch()){
-					$retVal .= "<tr><td>" . $moveChargedName ."</td><td><span class=\"movetype movetype--" . strtolower($moveChargedTypeName) ."\">" . $moveChargedTypeName . "</span></td><td>" . $moveChargedCharges."</td><td>" . $moveChargedPower ."</td><td>". $moveChargedDuration ."</td><td>". $moveChargedActive ."</td></tr>";
+					$retVal .= "<tr><td>" . $moveChargedName ."</td><td><span class=\"movetype movetype--" . strtolower($moveChargedTypeName) ."\"></span></td><td>" . $moveChargedCharges."</td><td>" . $moveChargedPower ."</td><td>". $moveChargedDuration ."</td><td>". $moveChargedActive ."</td></tr>";
 				}
 				$retVal .= "</tbody></table>";
 			}
@@ -470,20 +470,20 @@
 					$retVal .= "<div class=\"pokemon__img\"><img src=\"/_includes/images/pokemon/".$imgID.".png\"/></div>";
 					$retVal .= "<div class=\"pokemon__name\">" . $pkmName . "</div>";
 					$retVal .= "<div class=\"pokemon__type__wrapper\">";
-					$retVal .= "<span class=\"pokemon__type pokemon__type--". strToLower($type1Name) ."\">" . $type1Name . "</span>";
+					$retVal .= "<span class=\"pokemon__type pokemon__type--". strToLower($type1Name) ."\"></span>";
 					if (!is_null($type2Name)){
-					$retVal .= "<span class=\"pokemon__type pokemon__type--". strToLower($type2Name) ."\">" . $type2Name . "</span>";
+					$retVal .= "<span class=\"pokemon__type pokemon__type--". strToLower($type2Name) ."\"></span>";
 					}
 					$retVal .= "</div>";
 					$retVal .= "<div class=\"pokemon__candy\">Candy: " . $candy . "</div>";
 					$retVal .= "<div class=\"pokemon__fastMove\">";
 					$retVal .= "<span class\"pokemon__fastMove__name\">" . $fastMoveName . "</span>";
-					$retVal .= "<span class\"pokemon__fastMove__type pokemon__fastMove__type--". strtolower($fastMoveType) ."\">" . $fastMoveType . "</span>";
+					$retVal .= "<span class\"pokemon__fastMove__type pokemon__fastMove__type--". strtolower($fastMoveType) ."\"></span>";
 					$retVal .= "<span class\"pokemon__fastMove__power\">" . $fastPower . "</span>";
 					$retVal .= "</div>";
 					$retVal .= "<div class=\"pokemon__chargedMove\">";
 					$retVal .= "<span class\"pokemon__chargedMove__name\">" . $chargedMoveName . "</span>";
-					$retVal .= "<span class\"pokemon__chargedMove__type pokemon__chargedMove__type--". strtolower($chargedMoveType) ."\">" . $chargedMoveType . "</span>";
+					$retVal .= "<span class\"pokemon__chargedMove__type pokemon__chargedMove__type--". strtolower($chargedMoveType) ."\"></span>";
 					$retVal .= "<span class\"pokemon__chargedMove__power\">" . $chargedPower . "</span>";
 					$retVal .= "</div>";
 					$retVal .= "</div>";

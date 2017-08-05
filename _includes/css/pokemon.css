@@ -10,25 +10,25 @@
 .pokemon__item__image img { max-height: 70px; max-width: 70px; display: block; margin: 0 auto; }
 .pokemon__item__name { display: block; text-align: center; height: 25px; }
 .pokemon__item .pokemon__item__types { width: 100%; text-align: center; margin: 5px 0; }
-.pokemon__item .pokemon__item__types .type { display: inline-block; width: calc(50% - 17px); margin: 0 5px; padding: 2px; font-size: 12px; color: #fff; border: 1px solid #333; text-align: center; }
-.pokemon__item .pokemon__item__types .type--normal { background: #6e6e6e; }
-.pokemon__item .pokemon__item__types .type--fighting { background: #a2642e; }
-.pokemon__item .pokemon__item__types .type--flying { background: #6398ab; }
-.pokemon__item .pokemon__item__types .type--poison { background: #ae00ff; }
-.pokemon__item .pokemon__item__types .type--ground { background: #a0642e; }
-.pokemon__item .pokemon__item__types .type--rock { background: #4f3117; }
-.pokemon__item .pokemon__item__types .type--bug { background: #99c12f; }
-.pokemon__item .pokemon__item__types .type--ghost { background: #330296; }
-.pokemon__item .pokemon__item__types .type--steel { background: #bababa; }
-.pokemon__item .pokemon__item__types .type--fire { background: #ff6c00; }
-.pokemon__item .pokemon__item__types .type--water { background: #007eff; }
-.pokemon__item .pokemon__item__types .type--grass { background: #247b26; }
-.pokemon__item .pokemon__item__types .type--electric { background: #ebd300; }
-.pokemon__item .pokemon__item__types .type--psychic { background: #ff00ba; }
-.pokemon__item .pokemon__item__types .type--ice { background: #64e2a8; }
-.pokemon__item .pokemon__item__types .type--dragon { background: #1e00ff; }
-.pokemon__item .pokemon__item__types .type--fairy { background: #e77ce6; }
-.pokemon__item .pokemon__item__types .type--dark { background: #2c292c; }
+.pokemon__item .pokemon__item__types .type { display: inline-block; margin: 0 5px; padding: 2px; width: 30px; height: 30px; background-size: cover; }
+.pokemon__item .pokemon__item__types .type--normal { background-image: url("/_includes/images/types/1.png"); }
+.pokemon__item .pokemon__item__types .type--fighting { background-image: url("/_includes/images/types/2.png"); }
+.pokemon__item .pokemon__item__types .type--flying { background-image: url("/_includes/images/types/3.png"); }
+.pokemon__item .pokemon__item__types .type--poison { background-image: url("/_includes/images/types/4.png"); }
+.pokemon__item .pokemon__item__types .type--ground { background-image: url("/_includes/images/types/5.png"); }
+.pokemon__item .pokemon__item__types .type--rock { background-image: url("/_includes/images/types/6.png"); }
+.pokemon__item .pokemon__item__types .type--bug { background-image: url("/_includes/images/types/7.png"); }
+.pokemon__item .pokemon__item__types .type--ghost { background-image: url("/_includes/images/types/8.png"); }
+.pokemon__item .pokemon__item__types .type--steel { background-image: url("/_includes/images/types/9.png"); }
+.pokemon__item .pokemon__item__types .type--fire { background-image: url("/_includes/images/types/10.png"); }
+.pokemon__item .pokemon__item__types .type--water { background-image: url("/_includes/images/types/11.png"); }
+.pokemon__item .pokemon__item__types .type--grass { background-image: url("/_includes/images/types/12.png"); }
+.pokemon__item .pokemon__item__types .type--electric { background-image: url("/_includes/images/types/13.png"); }
+.pokemon__item .pokemon__item__types .type--psychic { background-image: url("/_includes/images/types/14.png"); }
+.pokemon__item .pokemon__item__types .type--ice { background-image: url("/_includes/images/types/15.png"); }
+.pokemon__item .pokemon__item__types .type--dragon { background-image: url("/_includes/images/types/16.png"); }
+.pokemon__item .pokemon__item__types .type--fairy { background-image: url("/_includes/images/types/17.png"); }
+.pokemon__item .pokemon__item__types .type--dark { background-image: url("/_includes/images/types/18.png"); }
 .pokemon__item .pokemon__item__link { display: block; text-align: center; text-decoration: underline; }
 .pokemon__item .add__pokemon { display: block; text-align: center; text-decoration: underline; }
 
@@ -49,7 +49,7 @@
   .pokemon__item:nth-child(6n-2) { margin-right: 2%; margin-left: 2%; }
   .pokemon__item:nth-child(6n-1) { margin-right: 2%; margin-left: 2%; }
   .pokemon__item:nth-child(6n) { margin-left: 2%; margin-right: 0; } }
-.notification__area { position: fixed; top: 50px; right: 50px; width: 250px; height: 75px; overflow: hidden; }
+.notification__area { position: fixed; top: 50px; right: 50px; width: 250px; overflow: hidden; }
 .notification__area .notification__wrapper { background: rgba(255, 255, 255, 0.6); border-radius: 5px; }
 .notification__area .notification__wrapper:before, .notification__area .notification__wrapper:after { content: ''; display: table; }
 .notification__area .notification__wrapper:after { clear: both; }
@@ -81,25 +81,25 @@
 .charged__moves th, .fast__moves th { text-decoration: underline; }
 .charged__moves td, .charged__moves th, .fast__moves td, .fast__moves th { text-align: center; padding: 5px 0; border: 0.5px solid #999; }
 .charged__moves td:first-child, .fast__moves td:first-child { width: 30%; }
-.charged__moves .movetype, .fast__moves .movetype { display: block; padding: 2px; font-size: 12px; color: #fff; border: 1px solid #333; text-align: center; text-shadow: 2px 2px 0px 3px #333; }
-.charged__moves .movetype--normal, .fast__moves .movetype--normal { background: #6e6e6e; }
-.charged__moves .movetype--fighting, .fast__moves .movetype--fighting { background: #a2642e; }
-.charged__moves .movetype--flying, .fast__moves .movetype--flying { background: #6398ab; }
-.charged__moves .movetype--poison, .fast__moves .movetype--poison { background: #ae00ff; }
-.charged__moves .movetype--ground, .fast__moves .movetype--ground { background: #a0642e; }
-.charged__moves .movetype--rock, .fast__moves .movetype--rock { background: #4f3117; }
-.charged__moves .movetype--bug, .fast__moves .movetype--bug { background: #99c12f; }
-.charged__moves .movetype--ghost, .fast__moves .movetype--ghost { background: #330296; }
-.charged__moves .movetype--steel, .fast__moves .movetype--steel { background: #bababa; }
-.charged__moves .movetype--fire, .fast__moves .movetype--fire { background: #ff6c00; }
-.charged__moves .movetype--water, .fast__moves .movetype--water { background: #007eff; }
-.charged__moves .movetype--grass, .fast__moves .movetype--grass { background: #247b26; }
-.charged__moves .movetype--electric, .fast__moves .movetype--electric { background: #ebd300; }
-.charged__moves .movetype--psychic, .fast__moves .movetype--psychic { background: #ff00ba; }
-.charged__moves .movetype--ice, .fast__moves .movetype--ice { background: #64e2a8; }
-.charged__moves .movetype--dragon, .fast__moves .movetype--dragon { background: #1e00ff; }
-.charged__moves .movetype--fairy, .fast__moves .movetype--fairy { background: #e77ce6; }
-.charged__moves .movetype--dark, .fast__moves .movetype--dark { background: #2c292c; }
+.charged__moves .movetype, .fast__moves .movetype { display: block; height: 40px; width: 40px; background-size: cover; }
+.charged__moves .movetype--normal, .fast__moves .movetype--normal { background-image: url("/_includes/images/types/1.png"); }
+.charged__moves .movetype--fighting, .fast__moves .movetype--fighting { background-image: url("/_includes/images/types/2.png"); }
+.charged__moves .movetype--flying, .fast__moves .movetype--flying { background-image: url("/_includes/images/types/3.png"); }
+.charged__moves .movetype--poison, .fast__moves .movetype--poison { background-image: url("/_includes/images/types/4.png"); }
+.charged__moves .movetype--ground, .fast__moves .movetype--ground { background-image: url("/_includes/images/types/5.png"); }
+.charged__moves .movetype--rock, .fast__moves .movetype--rock { background-image: url("/_includes/images/types/6.png"); }
+.charged__moves .movetype--bug, .fast__moves .movetype--bug { background-image: url("/_includes/images/types/7.png"); }
+.charged__moves .movetype--ghost, .fast__moves .movetype--ghost { background-image: url("/_includes/images/types/8.png"); }
+.charged__moves .movetype--steel, .fast__moves .movetype--steel { background-image: url("/_includes/images/types/9.png"); }
+.charged__moves .movetype--fire, .fast__moves .movetype--fire { background-image: url("/_includes/images/types/10.png"); }
+.charged__moves .movetype--water, .fast__moves .movetype--water { background-image: url("/_includes/images/types/11.png"); }
+.charged__moves .movetype--grass, .fast__moves .movetype--grass { background-image: url("/_includes/images/types/12.png"); }
+.charged__moves .movetype--electric, .fast__moves .movetype--electric { background-image: url("/_includes/images/types/13.png"); }
+.charged__moves .movetype--psychic, .fast__moves .movetype--psychic { background-image: url("/_includes/images/types/14.png"); }
+.charged__moves .movetype--ice, .fast__moves .movetype--ice { background-image: url("/_includes/images/types/15.png"); }
+.charged__moves .movetype--dragon, .fast__moves .movetype--dragon { background-image: url("/_includes/images/types/16.png"); }
+.charged__moves .movetype--fairy, .fast__moves .movetype--fairy { background-image: url("/_includes/images/types/17.png"); }
+.charged__moves .movetype--dark, .fast__moves .movetype--dark { background-image: url("/_includes/images/types/18.png"); }
 
 .evolution__wrapper { position: relative; }
 .evolution__wrapper:before, .evolution__wrapper:after { content: ''; display: table; }

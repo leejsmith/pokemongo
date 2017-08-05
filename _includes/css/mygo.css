@@ -1,0 +1,26 @@
+.pokemon__wrapper { width: calc(100% / 2); float: left; margin-bottom: 20px; }
+.pokemon__wrapper .pokemon__cp { text-align: center; }
+.pokemon__wrapper .pokemon__img img { display: block; margin: 0 auto; max-width: 100%; max-height: 100px; }
+.pokemon__wrapper .pokemon__name { text-align: center; }
+.pokemon__wrapper .pokemon__type__wrapper { text-align: center; }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type { width: calc(50% - 16px); display: inline-block; width: 40px; height: 40px; background-size: cover; }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--normal { background-image: url("/_includes/images/types/1.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--fighting { background-image: url("/_includes/images/types/2.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--flying { background-image: url("/_includes/images/types/3.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--poison { background-image: url("/_includes/images/types/4.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--ground { background-image: url("/_includes/images/types/5.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--rock { background-image: url("/_includes/images/types/6.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--bug { background-image: url("/_includes/images/types/7.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--ghost { background-image: url("/_includes/images/types/8.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--steel { background-image: url("/_includes/images/types/9.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--fire { background-image: url("/_includes/images/types/10.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--water { background-image: url("/_includes/images/types/11.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--grass { background-image: url("/_includes/images/types/12.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--electric { background-image: url("/_includes/images/types/13.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--psychic { background-image: url("/_includes/images/types/14.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--ice { background-image: url("/_includes/images/types/15.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--dragon { background-image: url("/_includes/images/types/16.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--fairy { background-image: url("/_includes/images/types/17.png"); }
+.pokemon__wrapper .pokemon__type__wrapper .pokemon__type--dark { background-image: url("/_includes/images/types/18.png"); }
+
+

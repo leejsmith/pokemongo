@@ -41,20 +41,27 @@ if(login_check($mysqli) == true) {
 ?>
 
 <script type="type/javascript">
-    var windowWidth = $(window).width();
-    var windowHeight = $(window).height();
-    if (windowWidth < 350) {
-        width = windowWidth - 30;
+    var windowWidth = $('.add__pokemon__overlay').width();
+    var windowHeight = $('.add__pokemon__overlay').height();
+    console.log ("Window W:" + windowWidth + " Window H:" + windowHeight);
+    var marginW = 0;
+    var marginH = 0;
+    if (windowWidth < 410) {
+        width = windowWidth - 110;
+        marginW = ((windowWidth - width) / 2) / 2;
     } else {
         width = 350;
+        marginW = ((windowWidth - width) / 2);
     }
-    if (windowHeight < 500) {
-        height = windowHeight - 30;
+    if (windowHeight < 560) {
+        height = windowHeight - 110;
+        marginH = ((windowHeight - height) / 2) / 2;
     } else {
         height = 500;
+        marginH = ((windowHeight - height) / 2) / 2;
     }
-    var marginW = (windowWidth - (width + 30)) / 2;
-    var marginH = (windowHeight - height) / 2;
+
+    console.log("Width:" + width + " Height:" + height + " Margin: " + marginW + "," + marginH);
     $('.add__pokemon__wrapper').css('width', width + 'px');
     $('.add__pokemon__wrapper').css('height', height + 'px');
     $('.add__pokemon__wrapper').css('margin', marginH + 'px ' + marginW + 'px');
@@ -85,8 +92,9 @@ if(login_check($mysqli) == true) {
                 var $retVal = $.parseJSON(data);
                 $('.add__pokemon__overlay').hide();
                 $('.notification__area').append('<div class="notification__wrapper"><div class="pokemon"><img src="/_includes/images/pokemon/<?php echo $imgID; ?>.png"/></div><div class="message"><p>Pokemon Added</p></div></div>');
+                $('.notification__area').css('height','75px');
                 $('.notification__wrapper').delay(2000).slideUp('slow');
-                setTimeout(function(){$('.notification__wrapper').remove()}, 4000);
+                setTimeout(function(){$('.notification__wrapper').remove();$('.notification__area').css('height','0');}, 4000);
             },
             error: function(data) {
                 var $retVal = $.parseJSON(data);
