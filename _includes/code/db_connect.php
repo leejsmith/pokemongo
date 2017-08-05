@@ -5,7 +5,7 @@ $mysqli = new mysqli(HOST, USERNAME, PASSWORD, DATABASE);
 
 // Check connection
 if ($mysqli->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
+	die("Connection failed: " . $mysqli->connect_error);
 }
 
 function register($username, $email, $password) {

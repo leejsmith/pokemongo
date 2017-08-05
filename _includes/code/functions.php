@@ -292,9 +292,18 @@
 			} else {
 				$imgID = $id;
 			}
-			$retVal = "<div class=\"pokemon__evo\">";
+			$retVal .= "<div class=\"pokemon__evo\">";
 			if ($isFirst != 1){
-				$retVal .= "<div class=\"arrow\"></div>";
+				$retVal .= "<div class=\"arrow__wrapper\"><div class=\"arrow\"></div>";
+				if (!is_null($item)){
+					$retVal .= "<div class=\"item item-- " . $item . "\"></div>";
+				}
+				if (!is_null($candy)){
+					$retVal .= "<div class=\"candy\">" . $candy . "</div>";
+				}
+				if (!is_null($desc)){
+					$retVal .= "<div class=\"evo__desc\">" . $desc . "</div>";
+				}
 			}
 
 			$retVal .= "<div class=\"pokemon__details\">";
@@ -350,10 +359,10 @@
 	function getEvolutions($mysqli, $pkid, $retIn){
 		$retVal = "";
 		$addPkm = "";
-		$strSQL = "SELECT * FROM tbl_Evolution WHERE pokemon1 IN (" . $pkid . ");";
+		$strSQL = "SELECT pokemon2 FROM tbl_Evolution WHERE pokemon1 IN (" . $pkid . ");";
 		if ($stmtEvo = $mysqli->prepare($strSQL)){
 			$stmtEvo->execute();
-			$stmtEvo->bind_result($pk1, $pk2, $candy, $item, $desc);
+			$stmtEvo->bind_result($pk2);
 			$stmtEvo->store_result();
 			if ($stmtEvo->num_rows >= 1){
 				while($stmtEvo->fetch()){
